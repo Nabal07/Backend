@@ -6,12 +6,17 @@ const model = mongoose.model;
 const StorageSchema = new Schema({
     conteudo: {
         type: Object,
-        required: true,
+        //required: true,
     },
     criadoEm: {
         type: Date,
         default: Date.now, 
+    },
+    atualizadoEm: {
+        type: Date,
+        default: Date.now, 
     }
+
 });
 
 export default model("Storage", StorageSchema);
