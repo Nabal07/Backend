@@ -5,7 +5,7 @@ import Storage from './Storage.js';
 const app = express();
 const PORT = process.env.PORT || 8081;
 
-app.use(express.json());
+app.use(express.json({extended: false}));
 
 (() => {
     
@@ -15,9 +15,15 @@ app.use(express.json());
         try {
             const { conteudo, criadoEm } = req.body;
 
+            if(conteudo === null)
+                {
+                    return res.status(400).json({status: 400, message: "O conteudo esta nulo, passe um conteudo"})
+                }
+
             let storageData = {
                 conteudo,
-                criadoEm: new Date()
+                criadoEm: new Date(),
+                atualizadoEm: null
             };
 
             storageData = await Storage.create(storageData);
@@ -55,15 +61,16 @@ app.use(express.json());
         }
     });
 
+
     app.put('/api/storage/:id', async (req, res) => {
         try {
-            const { status, data } = req.body;
+            const { conteudo, status } = req.body;
             const { id } = req.params;
             const filter = { _id: id };
             const update = {
                 $set: {
-                data: data,
-                status: status
+                conteudo: conteudo,
+                atualizadoEm: new Date()
                 },
             };
 
